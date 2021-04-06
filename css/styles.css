@@ -1,0 +1,26 @@
+h1{
+    text-align: center;
+    font-family: 'Kiwi Maru', serif;
+    margin-top: 3rem;
+}
+
+body{
+    margin: 0;
+    background-color: aquamarine;
+}
+
+.matrix{
+    text-align: center;
+}
+
+.cell{
+    background-color: #fff;
+    height: 5.5rem;
+    width: 5.5rem;
+    display: inline-block;
+}
+
+.content{
+    margin-top: 4rem;
+    /* border: 2px solid black; */
+}
