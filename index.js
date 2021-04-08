@@ -1,11 +1,10 @@
 
 const myArray = document.querySelectorAll("td");
 
+
 const cross = [];
 const circle = [];
-
 let noOfTableClicks = 0;
-
 
 myArray.forEach((tableData) => {
     tableData.addEventListener("click", function () {
@@ -14,8 +13,10 @@ myArray.forEach((tableData) => {
         this.innerHTML = handleClick(noOfTableClicks, cellNo);
         let display = document.querySelector("h2");
         if (checkIfSomeoneWins(cross)) {
+            playSound("win")
             display.innerHTML = "cross wins";
         } else if (checkIfSomeoneWins(circle)) {
+            playSound("win")
             display.innerHTML = "circle wins";
         } else if (noOfTableClicks === 9) {
             display.innerHTML = "Match Draw";
@@ -26,11 +27,18 @@ myArray.forEach((tableData) => {
 function handleClick(num, cellNo) {
     if (num % 2 === 1) {
         cross.push(cellNo);
+        playSound("cross");
         return '<i class="fas fa-times fa-5x"></i>'
     } else {
         circle.push(cellNo);
+        playSound("circle");
         return '<i class="far fa-circle fa-4x"></i>'
     }
+}
+
+function playSound(name) {
+    var myAudio = new Audio("sounds/" + name + ".mp3");
+    myAudio.play();
 }
 
 function checkIfSomeoneWins(anArray) {
@@ -98,3 +106,5 @@ function diagonalMatch(anArray) {
         return true;
     }
 }
+
+

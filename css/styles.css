@@ -4,6 +4,11 @@ h1,h2{
     margin-top: 3rem;
 }
 
+p{
+    text-align: center;
+    font-family: 'Kiwi Maru', serif;
+}
+
 body{
     margin: 0;
     background-color: aquamarine;
