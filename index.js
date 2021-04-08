@@ -1,10 +1,11 @@
-const player1Name = prompt("Enter the name of Player-1");
-const player2Name = prompt("Enter the name of player-2");
+const playerName = [];
+playerName.push(prompt("Enter the name of Player-1"));
+playerName.push(prompt("Enter the name of Player-2"));
 const newNum = Math.floor(Math.random() * 100);
 if (newNum % 2 === 1) {
-    alert(player1Name + " -> Cross & " + player2Name + " -> Circle \n Player with cross plays first \n Click on the cell to make your move.");
+    alert(playerName[0] + " -> Cross & " + playerName[1] + " -> Circle \n Player with cross plays first \n Click on the cell to make your move.");
 } else {
-    alert(player2Name + " -> Cross & " + player1Name + " -> Circle \n Player with cross plays first \n Click on the cell to make your move.");
+    alert(playerName[1] + " -> Cross & " + playerName[0] + " -> Circle \n Player with cross plays first \n Click on the cell to make your move.");
 }
 //Assuming player1 chooses cross and player2 chooses circle
 const player1 = [];
@@ -23,13 +24,12 @@ function respondCellClicks() {
             num++;
             this.innerHTML = generateSignAndPush(num, cellNo);
             if (checkForGameEnd(player1)) {
-                document.querySelector("table").style.display = "none";
-                document.querySelector("h2").innerHTML = '<i class="fas fa-trophy fa"></i>' + player1Name + " wins";
-            };
-            if (checkForGameEnd(player2)) {
-                document.querySelector("table").style.display = "none";
-                document.querySelector("h2").innerHTML = '<i class="fas fa-trophy fa"></i>' + player2Name + " wins";
-            };
+                displayWinner(player1, 0)
+            } else if(checkForGameEnd(player2)) {
+                displayWinner(player2, 1)
+            } else if(num===9) {
+                handleDraw();
+            }
         });
     });
 }
@@ -72,4 +72,18 @@ function checkForGameEnd(array) {
 function playSound(name) {
     var myAudio = new Audio("sounds/" + name + ".mp3");
     myAudio.play();
+}
+
+function displayWinner(arr, number) {
+    document.querySelector("table").style.display = "none";
+    document.querySelector("h2").innerHTML = '<i class="fas fa-trophy fa"></i>' + playerName[number] + " wins";
+    document.querySelector("p").innerHTML = arr.length + " Moves Made";
+    document.querySelector(".btn").style.display = "block";
+}
+
+function handleDraw() {
+    document.querySelector("table").style.display = "none";
+    document.querySelector("h2").innerHTML = "Draw!!!";
+    document.querySelector("p").innerHTML = playerName[0] + " Made " + player1.length + " moves <br> " + playerName[1] + " Made " + player2.length + " moves" ;
+    document.querySelector(".btn").style.display = "block";
 }

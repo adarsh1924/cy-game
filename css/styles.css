@@ -9,7 +9,12 @@ h2 {
    font-family: 'Montserrat', sans-serif;
    text-align: center;
 }
-
+p{
+    text-align: center;
+    color: #4d4545;
+    font-family: 'Montserrat', sans-serif;
+    font-size: large;
+}
 body{
     margin: 0;
     background-color: aquamarine;
@@ -31,13 +36,11 @@ body{
     margin-right: auto;
 }
 
-form{
-    width: 40%;
-    margin-top: 5rem;
-    margin-left: auto;
-    margin-right: auto;
+.btn{
+    text-align: center;
+    display: none;
 }
 
 button{
-    margin-top: 1rem;
+    cursor: pointer;
 }
