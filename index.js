@@ -1,110 +1,75 @@
+const player1Name = prompt("Enter the name of Player-1");
+const player2Name = prompt("Enter the name of player-2");
+const newNum = Math.floor(Math.random() * 100);
+if (newNum % 2 === 1) {
+    alert(player1Name + " -> Cross & " + player2Name + " -> Circle \n Player with cross plays first \n Click on the cell to make your move.");
+} else {
+    alert(player2Name + " -> Cross & " + player1Name + " -> Circle \n Player with cross plays first \n Click on the cell to make your move.");
+}
+//Assuming player1 chooses cross and player2 chooses circle
+const player1 = [];
+const player2 = [];
+let num = 0;
 
-const myArray = document.querySelectorAll("td");
+//respondCellClicks responds to the cell clicks and using generateSignAndPush it generates the sign as well as keep a record of the cell no. being selected by players. Finally with every clicks it checks for game end.
 
+respondCellClicks();
 
-const cross = [];
-const circle = [];
-let noOfTableClicks = 0;
+function respondCellClicks() {
+    const cells = document.querySelectorAll("td");
+    cells.forEach((cell) => {
+        cell.addEventListener("click", function () {
+            const cellNo = this.classList[1];
+            num++;
+            this.innerHTML = generateSignAndPush(num, cellNo);
+            if (checkForGameEnd(player1)) {
+                document.querySelector("table").style.display = "none";
+                document.querySelector("h2").innerHTML = '<i class="fas fa-trophy fa"></i>' + player1Name + " wins";
+            };
+            if (checkForGameEnd(player2)) {
+                document.querySelector("table").style.display = "none";
+                document.querySelector("h2").innerHTML = '<i class="fas fa-trophy fa"></i>' + player2Name + " wins";
+            };
+        });
+    });
+}
 
-myArray.forEach((tableData) => {
-    tableData.addEventListener("click", function () {
-        let cellNo = this.classList[1];
-        noOfTableClicks++;
-        this.innerHTML = handleClick(noOfTableClicks, cellNo);
-        let display = document.querySelector("h2");
-        if (checkIfSomeoneWins(cross)) {
-            playSound("win")
-            display.innerHTML = "cross wins";
-        } else if (checkIfSomeoneWins(circle)) {
-            playSound("win")
-            display.innerHTML = "circle wins";
-        } else if (noOfTableClicks === 9) {
-            display.innerHTML = "Match Draw";
-        }
-    })
-});
-
-function handleClick(num, cellNo) {
-    if (num % 2 === 1) {
-        cross.push(cellNo);
-        playSound("cross");
-        return '<i class="fas fa-times fa-5x"></i>'
-    } else {
-        circle.push(cellNo);
-        playSound("circle");
+function generateSignAndPush(input, cellNo) {
+    if (input % 2 === 0) {
+        (newNum % 2 === 1) ? player2.push(cellNo) : player1.push(cellNo)
         return '<i class="far fa-circle fa-4x"></i>'
+    } else {
+        (newNum % 2 === 1) ? player1.push(cellNo) : player2.push(cellNo)
+        return '<i class="fas fa-times fa-5x"></i>'
     }
+}
+
+function checkForGameEnd(array) {
+    const rowIndex = array.map(function (element) {
+        return element.substring(1, 2);
+    })
+    const colIndex = array.map(function (element) {
+        return element.substring(2, 3);
+    })
+    const rowMatch = [], colMatch = [];
+    for (let i = 0; i < 3; i++) {
+        rowMatch.push(rowIndex.filter(function (element) {
+            return element === i.toString()
+        }))
+        colMatch.push(colIndex.filter(function (element) {
+            return element === i.toString()
+        }))
+    }
+    const diagMatch = (array.includes("a00") && array.includes("a11") && array.includes("a22")) || (array.includes("a02") && array.includes("a11") && array.includes("a20"));
+    for (let i = 0; i < 3; i++) {
+        if (rowMatch[i].length === 3 || colMatch[i].length === 3 || diagMatch) {
+            return true;
+        }
+    }
+
 }
 
 function playSound(name) {
     var myAudio = new Audio("sounds/" + name + ".mp3");
     myAudio.play();
 }
-
-function checkIfSomeoneWins(anArray) {
-    if (horizontalMatch(anArray) || verticalMatch(anArray) || diagonalMatch(anArray)) {
-        return true;
-    }
-}
-
-function horizontalMatch(anArray) {
-
-    const newArray = anArray.map(function (element) {
-        return element.substring(1, 2)
-    });
-
-    const newArray0 = newArray.filter(function (element) {
-        return element === "0"
-    });
-
-    const newArray1 = newArray.filter(function (element) {
-        return element === "1"
-    });
-
-    const newArray2 = newArray.filter(function (element) {
-        return element === "2"
-    });
-
-    if (newArray0.length === 3 || newArray1.length === 3 || newArray2.length === 3) {
-        return true;
-    }
-
-}
-
-function verticalMatch(anArray) {
-    const newArray = anArray.map(function (element) {
-        return element.substring(2, 3)
-    });
-
-    const newArray0 = newArray.filter(function (element) {
-        return element === "0"
-    });
-
-    const newArray1 = newArray.filter(function (element) {
-        return element === "1"
-    });
-
-    const newArray2 = newArray.filter(function (element) {
-        return element === "2"
-    });
-
-    if (newArray0.length === 3 || newArray1.length === 3 || newArray2.length === 3) {
-        return true;
-    }
-}
-
-function diagonalMatch(anArray) {
-    const newArray = anArray.map(function (element) {
-        return element.substring(1, 3)
-    });
-
-    const firstDiag = newArray.includes("00") && newArray.includes("11") && newArray.includes("22")
-
-    const secondDiag = newArray.includes("02") && newArray.includes("11") && newArray.includes("20")
-
-    if (firstDiag || secondDiag) {
-        return true;
-    }
-}
-
-
