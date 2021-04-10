@@ -7,12 +7,11 @@ if (newNum % 2 === 1) {
 } else {
     alert(playerName[1] + " -> Cross & " + playerName[0] + " -> Circle \n Player with cross plays first \n Click on the cell to make your move.");
 }
-//Assuming player1 chooses cross and player2 chooses circle
-const player1 = [];
-const player2 = [];
-let num = 0;
 
-//respondCellClicks responds to the cell clicks and using generateSignAndPush it generates the sign as well as keep a record of the cell no. being selected by players. Finally with every clicks it checks for game end.
+let player1Wins = 0, player2Wins = 0, roundNo = 1;
+let player1 = [];
+let player2 = [];
+let numOfClicks = 0;
 
 respondCellClicks();
 
@@ -21,15 +20,25 @@ function respondCellClicks() {
     cells.forEach((cell) => {
         cell.addEventListener("click", function () {
             const cellNo = this.classList[1];
-            num++;
-            this.innerHTML = generateSignAndPush(num, cellNo);
-            if (checkForGameEnd(player1)) {
-                displayWinner(player1, 0)
-            } else if(checkForGameEnd(player2)) {
-                displayWinner(player2, 1)
-            } else if(num===9) {
-                handleDraw();
-            }
+            numOfClicks++;
+            this.innerHTML = generateSignAndPush(numOfClicks, cellNo);
+            setTimeout(() => {
+                if (checkForGameEnd(player1)) {
+                    player1Wins++;
+                    roundNo++
+                    nextRound(roundNo);
+                } else if (checkForGameEnd(player2)) {
+                    player2Wins++;
+                    roundNo++
+                    nextRound(roundNo);
+                } else if (numOfClicks === 9) {
+                    player1Wins++;
+                    player2Wins++;
+                    roundNo++;
+                    nextRound(roundNo);
+                }
+            }, 1000);
+
         });
     });
 }
@@ -76,14 +85,43 @@ function playSound(name) {
 
 function displayWinner(arr, number) {
     document.querySelector("table").style.display = "none";
-    document.querySelector("h2").innerHTML = '<i class="fas fa-trophy fa"></i>' + playerName[number] + " wins";
-    document.querySelector("p").innerHTML = arr.length + " Moves Made";
-    document.querySelector(".btn").style.display = "block";
+    document.querySelector("h1").innerHTML= "Tic-Tac-Toe";
+    let winner = "";
+    if (player1Wins > player2Wins) {
+        winner = playerName[0];
+    } else if (player1Wins < player2Wins) {
+        winner = playerName[1];
+    } else {
+        handleDraw();
+    }
+    document.querySelector("h2").innerHTML = '<i class="fas fa-trophy fa"></i>' + winner + " wins";
+    // document.querySelector("p").innerHTML = arr.length + " Moves Made";
+    // document.querySelector(".btn").style.display = "block";
 }
 
 function handleDraw() {
     document.querySelector("table").style.display = "none";
     document.querySelector("h2").innerHTML = "Draw!!!";
-    document.querySelector("p").innerHTML = playerName[0] + " Made " + player1.length + " moves <br> " + playerName[1] + " Made " + player2.length + " moves" ;
-    document.querySelector(".btn").style.display = "block";
+    // document.querySelector("p").innerHTML = playerName[0] + " Made " + player1.length + " moves <br> " + playerName[1] + " Made " + player2.length + " moves";
+    // document.querySelector(".btn").style.display = "block";
+}
+
+function nextRound(roundNo) {
+    if (roundNo <= 3) {
+        document.querySelector("h1").innerHTML= "Tic-Tac-Toe (Round-"+roundNo+")";
+        document.querySelectorAll("td").forEach(tableData => {
+            tableData.innerHTML = ""
+        })
+        document.querySelector("table").style.removeProperty("display");
+        numOfClicks = 0;
+        player1 = [];
+        player2 = [];
+    } else {
+        displayWinner();
+    }
+
+}
+
+function score() {
+
 }
